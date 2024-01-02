@@ -8,6 +8,7 @@ from .EstimateConsequentParameters import ConsequentEstimator
 from .Tester import SugenoFISTester
 from .FeatureSelection import FeatureSelector
 from .Sampler import Sampler
+from .GeneticAlgorithmForFeatureSelection import GeneticAlgorithm
 import numpy as np
 
 class BuildTSFIS(object):
@@ -136,6 +137,9 @@ class BuildTSFIS(object):
                     self.selected_feature_indices, self.selected_variable_names, self.log_indices, self.log_variable_names = fs.log_wrapper()
                 elif kwargs['feature_selection'] == 'fst-pso' or kwargs['feature_selection'] == 'fstpso' or kwargs['feature_selection'] == 'pso' or kwargs['feature_selection'] == True:
                     self.selected_feature_indices, self.selected_variable_names, self.nr_clus= fs.fst_pso_feature_selection(max_iter=kwargs['fstpso_max_iter'], **kwargs) 
+                elif kwargs['feature_selection'] == 'GAFS' or kwargs['feature_selection'] == 'gafs':
+                    self.selected_feature_indices, self.selected_variable_names = GeneticAlgorithm(self.x_train, self.y_train, self.variable_names, population_size=100,
+                        generations=10, crossover_prob=0.8, mutation_prob=0.05, selection_method='tournament', verbose=self.verbose).run()
                 self.x_train = self.x_train[:, self.selected_feature_indices]
                 self.x_test = self.x_test[:, self.selected_feature_indices]
                 
