@@ -1,5 +1,12 @@
+import numpy as np
+import pandas as pd
+from sklearn.ensemble import RandomForestRegressor
+import time
+from sklearn.metrics import mean_squared_error
+from sklearn.model_selection import train_test_split
+
 class GeneticAlgorithm:
-    def __init__(self, dataX, dataY, population_size, variable_names, generations, crossover_prob, mutation_prob, selection_method, performance_metric, verbose):
+    def __init__(self, dataX, dataY, variable_names, population_size, generations, crossover_prob, mutation_prob, selection_method, verbose):
         self.dataX = dataX
         self.dataY = dataY
         self.variable_names = variable_names
@@ -9,7 +16,7 @@ class GeneticAlgorithm:
         self.mutation_prob = mutation_prob
         self.selection_method = selection_method
         self.verbose = verbose
-        self.num_features = len(dataX.columns)
+        self.num_features = len(variable_names)
         self.population = self.initialize_population()
 
     def initialize_population(self):
@@ -18,7 +25,7 @@ class GeneticAlgorithm:
 
     def calculate_fitness(self, individual):
         # Extract features based on the individual's representation
-        selected_features = self.dataX.columns[individual.astype(bool)]
+        selected_features = self.variable_names[individual.astype(bool)]
         X = self.dataframe[selected_features]
 
         # Split data for training and testing
