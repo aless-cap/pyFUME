@@ -94,7 +94,7 @@ class pyFUME(object):
             Prediction labels.
         """
         #get the prediction for the test data set
-        test = SugenoFISTester(model=self.FIS.model, test_data=self.FIS.x_test, variable_names=self.FIS.variable_names, golden_standard=self.FIS.y_test)
+        test = SugenoFISTester(model=self.FIS.model, test_data=self.FIS.x_test, variable_names=self.FIS.selected_variable_names, golden_standard=self.FIS.y_test)
         pred, _ = test.predict()
         return pred
     
@@ -116,7 +116,7 @@ class pyFUME(object):
         
         #get the prediction for a new data set
         model = self.get_model()
-        test = SugenoFISTester(model=model, test_data=xdata, golden_standard=None, variable_names=self.FIS.variable_names)
+        test = SugenoFISTester(model=model, test_data=xdata, golden_standard=None, variable_names=self.FIS.selected_variable_names)
         pred, _ = test.predict()
         return pred
     
@@ -182,7 +182,7 @@ class pyFUME(object):
         """        
         #get the prediction for a new data set
         model = self.get_model()
-        test = SugenoFISTester(model=model, test_data=xdata, golden_standard=ydata, variable_names=self.FIS.variable_names)
+        test = SugenoFISTester(model=model, test_data=xdata, golden_standard=ydata, variable_names=self.FIS.selected_variable_names)
         metric= test.calculate_performance(metric=error_metric)
         return metric
 
@@ -214,7 +214,7 @@ class pyFUME(object):
         """          
 
         # Calculate the firing strengths
-        fsc=FireStrengthCalculator(self.FIS.antecedent_parameters, self.FIS.nr_clus, self.FIS.variable_names)
+        fsc=FireStrengthCalculator(self.FIS.antecedent_parameters, self.FIS.nr_clus, self.FIS.selected_variable_names)
         firing_strengths = fsc.calculate_fire_strength(data)
         if normalize == True:
             firing_strengths=firing_strengths/firing_strengths.sum(axis=1)[:,None]
@@ -240,7 +240,7 @@ class pyFUME(object):
         
     def _get_RMSE(self):
         # Calculate the mean squared error of the model using the test data set
-        test = SugenoFISTester(model=self.FIS.model, test_data=self.FIS.x_test, golden_standard=self.FIS.y_test, variable_names=self.FIS.variable_names)
+        test = SugenoFISTester(model=self.FIS.model, test_data=self.FIS.x_test, golden_standard=self.FIS.y_test, variable_names=self.FIS.selected_variable_names)
         RMSE = test.calculate_RMSE()
         #RMSE = list(RMSE.values())
         #print('The RMSE of the fuzzy system is', RMSE)
@@ -248,7 +248,7 @@ class pyFUME(object):
     
     def _get_MSE(self):
         # Calculate the mean squared error of the model using the test data set
-        test = SugenoFISTester(model=self.FIS.model, test_data=self.FIS.x_test, golden_standard=self.FIS.y_test, variable_names=self.FIS.variable_names)
+        test = SugenoFISTester(model=self.FIS.model, test_data=self.FIS.x_test, golden_standard=self.FIS.y_test, variable_names=self.FIS.selected_variable_names)
         MSE = test.calculate_MSE()
         #RMSE = list(RMSE.values())
         #print('The RMSE of the fuzzy system is', RMSE)
@@ -257,32 +257,32 @@ class pyFUME(object):
     
     def _get_MAE(self):
         # Calculate the mean absolute error of the model using the test data set
-        test = SugenoFISTester(model=self.FIS.model, test_data=self.FIS.x_test, variable_names=self.FIS.variable_names, golden_standard=self.FIS.y_test)
+        test = SugenoFISTester(model=self.FIS.model, test_data=self.FIS.x_test, variable_names=self.FIS.selected_variable_names, golden_standard=self.FIS.y_test)
         MAE = test.calculate_MAE()
         return MAE
     
     def _get_MAPE(self):
         # Calculate the mean absolute percentage error of the model using the test data set
-        test = SugenoFISTester(model=self.FIS.model, test_data=self.FIS.x_test, golden_standard=self.FIS.y_test, variable_names=self.FIS.variable_names)
+        test = SugenoFISTester(model=self.FIS.model, test_data=self.FIS.x_test, golden_standard=self.FIS.y_test, variable_names=self.FIS.selected_variable_names)
         MAPE = test.calculate_MAPE()
         return MAPE
     
     def _get_accuracy(self):
         # Calculate the accuraccy of the model using the test data set
-        test = SugenoFISTester(model=self.FIS.model, test_data=self.FIS.x_test, golden_standard=self.FIS.y_test, variable_names=self.FIS.variable_names)
+        test = SugenoFISTester(model=self.FIS.model, test_data=self.FIS.x_test, golden_standard=self.FIS.y_test, variable_names=self.FIS.selected_variable_names)
         accuracy = test.calculate_accuracy()
         return accuracy
     
     def calculate_AUC(self, number_of_slices=100, show_plot = False):
         # Calculate the area under the ROC curve of the model using the test data set
-        test = SugenoFISTester(model=self.FIS.model, test_data=self.FIS.x_test, golden_standard=self.FIS.y_test, variable_names=self.FIS.variable_names)
+        test = SugenoFISTester(model=self.FIS.model, test_data=self.FIS.x_test, golden_standard=self.FIS.y_test, variable_names=self.FIS.selected_variable_names)
         AUC = test.calculate_AUC(number_of_slices, show_plot)
         return AUC
 
     
     def get_confusion_matrix(self):
         # Calculate the confusion matrix of the model using the test data set
-        test = SugenoFISTester(model=self.FIS.model, test_data=self.FIS.x_test, golden_standard=self.FIS.y_test, variable_names=self.FIS.variable_names)
+        test = SugenoFISTester(model=self.FIS.model, test_data=self.FIS.x_test, golden_standard=self.FIS.y_test, variable_names=self.FIS.selected_variable_names)
         con_mat = test.generate_confusion_matrix()
         return con_mat
     
